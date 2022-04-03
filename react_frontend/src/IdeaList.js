@@ -22,7 +22,7 @@ function IdeaList() {
     useEffect(() => {
         fetchIdeas();
     }, []);
-
+    
     return (
         <div className='ideaList'>
             <div className='head'>
