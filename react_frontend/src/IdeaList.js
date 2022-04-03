@@ -9,6 +9,20 @@ function IdeaList() {
     let selectedIdeaId = params.ideaId;
     let [ideas, setIdeas] = useState([]);
 
+    const createIdea = async() => {
+        console.log('createIdea');
+
+        const data = await fetch(
+            'http://localhost:5000/idea/create'
+        );
+        
+        const result = await data.json();
+        console.log(result)
+        if(result.title === "Success"){
+            window.location = '/idea/' + result.id;
+        }
+
+    }
     const fetchIdeas = async () => {
         const data = await fetch(
             'http://localhost:5000/ideas/'
@@ -32,7 +46,7 @@ function IdeaList() {
                 <img src="/" alt="" />
 
                 <div className="newIdea">
-                    <p>+</p>
+                    <p onClick={createIdea}>+</p>
                 </div>
                 
             </div>

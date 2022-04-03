@@ -11,3 +11,24 @@ body, html{
   background: #282727;
   min-height: 100%;
 }
+
+// SCROLLBAR
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #62cba3 transparent;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #62cba3;
+  border-radius: 10px;
+  border: 3px solid transparent;
+}

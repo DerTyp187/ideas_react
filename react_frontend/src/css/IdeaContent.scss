@@ -49,9 +49,10 @@
     }
 
     .textAreaContainer{
-        width: 100%;
+        width: calc(100% - 10px);
         height: 700px;
         display: block;
+        padding-left: 10px;
 
         textarea{
             outline: 0;

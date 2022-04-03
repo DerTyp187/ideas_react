@@ -22,7 +22,7 @@ app.use(function(req, res, next) {
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
-app.get('/idea/:id', (req, res) => {
+app.get('/idea/get/:id', (req, res) => {
 
     db.all(`SELECT * FROM ideas WHERE id = ${req.params.id}`, (err, rows) => {
         if (err) {
@@ -42,7 +42,7 @@ app.get('/idea/:id', (req, res) => {
 });
 
 app.get('/ideas', (req, res) => {
-    db.all(`SELECT * FROM ideas`, (err, rows) => {
+    db.all(`SELECT * FROM ideas ORDER BY id DESC`, (err, rows) => {
         if (err) {
             res.send({title: "Error", content: "Error fetching ideas"});
         }else{
@@ -92,6 +92,25 @@ app.post('/idea/update/:id', (req, res) => {
             res.send({title: "Error", type:"saving", message: "Error updating idea"});
         }else{
             res.send({title: "Success", type:"saving", message: "Idea updated"});
+        }
+    });
+});
+
+app.get('/idea/create', (req, res) => {
+    console.log("CREATE")
+    // Create new idea
+    db.run(`INSERT INTO ideas (title, content) VALUES ('New Idea', 'New Content')`, (err) => {
+        if (err) {
+            res.send({title: "Error", type:"create", message: "Error creating new idea"});
+        }else{
+            // SELECT id from last idea
+            db.all(`SELECT * FROM ideas ORDER BY id DESC LIMIT 1`, (err, rows) => {
+                if (err) {
+                    res.send({title: "Error", type:"create", message: "Error fetching new idea id"});
+                }else{
+                    res.send({title: "Success", type:"create", id:rows[0].id, message: "New idea created"});
+                }
+            });
         }
     });
 });

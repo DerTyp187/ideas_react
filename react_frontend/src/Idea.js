@@ -9,7 +9,7 @@ function Idea({ideaId, title, description, timestamp}){
 
     const fetchIdea = async () => {
         const data = await fetch(
-            'http://localhost:5000/idea/' + params.ideaId
+            'http://localhost:5000/idea/get/' + params.ideaId
         );
         
         const idea = await data.json();
