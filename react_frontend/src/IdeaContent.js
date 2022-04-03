@@ -7,25 +7,28 @@ function IdeaContent(){
     let [title, setTitle] = useState("");
     let [content, setContent] = useState("")
     let [saved , setSaved] = useState(false);
-    let [seconds, setSeconds] = useState(0);
+    let [intervalTime, setintervalTime] = useState(0);
+    let [contentError, setContentError] = useState("");
+    let [titleError, setTitleError] = useState("");
 
-    let secondsSaveInterval = 3;
+
+    //let secondsSaveInterval = 0;
 
     // TIMER
     useEffect(() => {
         const interval = setInterval(() => {
-            setSeconds(seconds => seconds + 1);
+            setintervalTime(intervalTime => intervalTime + 1);
 
-            if(seconds > secondsSaveInterval){ // save every > secondsSaveInterval seconds
+            if(intervalTime > 0){
                 saveData();
-                setSeconds(0);
+                setintervalTime(0);
             }
 
-            }, 1000);
+            }, 500);
 
         return () => clearInterval(interval);
     });
-    
+
     const saveData = async () => {
         let ideaData = {
             title: title,
@@ -44,7 +47,18 @@ function IdeaContent(){
 
         if(res.title === "Success"){
             setSaved(true);
-        } else {
+            setContentError("");
+            setTitleError("");
+        } else if(res.title === "Error"){
+            if(res.type === "content"){
+                setContentError(res.message);
+                setTitleError("");
+            } else if(res.type === "title"){
+                setTitleError(res.message);
+                setContentError("");
+            }
+            setSaved(false);
+        }else{
             setSaved(false);
         }
     }
@@ -69,14 +83,20 @@ function IdeaContent(){
     return(
         <div className="ideaContent">
             <div className="head">
-                <input type="text" name="title"
-                 value={title}
-                 onChange={(e) => { setTitle(e.target.value); setSaved(false) }}
-                 placeholder="Insert a title"/>
+                <label htmlFor="title">
+                    <input type="text" name="title"
+                    className={titleError ? "input-error" : ""}
+                    value={title}
+                    onChange={(e) => { setTitle(e.target.value); setSaved(false) }}
+                    placeholder="Insert a title"/>
+                    <small className="error-text">{titleError}</small>
+                </label>
+                
                  <small>{saved ? "Saved!": "Saving..."}</small>
             </div>
             <div className="textAreaContainer">
-                <textarea value={content} onChange={(e) => { setContent(e.target.value); setSaved(false)}}></textarea>
+            <small className="error-text">{contentError}</small>
+                <textarea className={contentError ? "input-error" : ""} value={content} onChange={(e) => { setContent(e.target.value); setSaved(false)}}></textarea>
             </div>
         </div>
     )
