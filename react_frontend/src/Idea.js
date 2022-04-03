@@ -7,6 +7,15 @@ function Idea({ideaId, title, description, timestamp}){
     let [t, setT] = useState(title);
     let [d, setD] = useState(description);
 
+
+    const deleteIdea = async () => {
+        let data = await fetch('http://localhost:5000/idea/delete/' + ideaId);
+        const result = await data.json();
+        console.log(result)
+        if(result.title === "Success"){
+            window.location.reload();
+        }
+    }
     const fetchIdea = async () => {
         const data = await fetch(
             'http://localhost:5000/idea/get/' + params.ideaId
@@ -35,7 +44,11 @@ function Idea({ideaId, title, description, timestamp}){
             <div className={`idea ${parseInt(params.ideaId) === ideaId ? "current" : ""}`}>
                 <p className="title">{t}</p>
                 <p className="description">{d}</p>
-                <p className="timestamp">{timestamp}</p>
+                <div className="right">
+                    <p className="delete" onClick={deleteIdea}>Delete</p>
+                    <p className="timestamp">{timestamp}</p>
+                </div>
+                
             </div>
         </Link>
     )

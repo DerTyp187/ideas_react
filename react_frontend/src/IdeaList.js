@@ -1,12 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import Idea from './Idea';
 import './css/IdeaList.scss';
-import { useParams} from 'react-router-dom'
 
 function IdeaList() {
-
-    let params = useParams()
-    let selectedIdeaId = params.ideaId;
     let [ideas, setIdeas] = useState([]);
 
     const createIdea = async() => {
