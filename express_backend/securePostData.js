@@ -8,6 +8,17 @@ function decode(text){
     return text;
 }
 
+function secureId(id){
+    id = id.replace(/'/g, "");
+    // Regex test if id is a number
+    let regexPattern = /^[0-9]*$/;
+    if(!regexPattern.test(id)){
+        return "";
+    }
+
+    return id;
+}
+
 module.exports = {
-    secure, decode
+    secure, decode, secureId
 }

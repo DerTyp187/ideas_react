@@ -23,8 +23,8 @@ app.use(function(req, res, next) {
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 app.get('/idea/get/:id', (req, res) => {
-
-    db.all(`SELECT * FROM ideas WHERE id = ${req.params.id}`, (err, rows) => {
+    let id = securePostData.secureId(req.params.id)
+    db.all(`SELECT * FROM ideas WHERE id = ${id}`, (err, rows) => {
         if (err) {
             res.send({title: "Error", content: "Error fetching idea"});
         }else{
@@ -58,6 +58,7 @@ app.get('/ideas', (req, res) => {
 
 
 app.post('/idea/update/:id', (req, res) => {
+    let id = securePostData.secureId(req.params.id)
 
     // Validate POST
     if(!req.body.title || req.body.title.replace(/\s/g, '').length === 0){
@@ -83,11 +84,7 @@ app.post('/idea/update/:id', (req, res) => {
     let title = securePostData.secure(req.body.title);
     let content = securePostData.secure(req.body.content);
 
-
-
-
-
-    db.run(`UPDATE ideas SET title = '${title}', content = '${content}' WHERE id = ${req.params.id}`, (err) => {
+    db.run(`UPDATE ideas SET title = '${title}', content = '${content}' WHERE id = ${id}`, (err) => {
         if (err) {
             res.send({title: "Error", type:"saving", message: "Error updating idea"});
         }else{
@@ -111,6 +108,19 @@ app.get('/idea/create', (req, res) => {
                     res.send({title: "Success", type:"create", id:rows[0].id, message: "New idea created"});
                 }
             });
+        }
+    });
+});
+
+
+// delete idea
+app.get('/idea/delete/:id', (req, res) => {
+    let id = securePostData.secureId(req.params.id)
+    db.run(`DELETE FROM ideas WHERE id = ${id}`, (err) => {
+        if (err) {
+            res.send({title: "Error", type:"delete", message: "Error deleting idea"});
+        }else{
+            res.send({title: "Success", type:"delete", message: "Idea deleted"});
         }
     });
 });
